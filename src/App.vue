@@ -206,6 +206,13 @@ export default {
       document.getElementById('infScroll').removeEventListener('scroll', this.scroll);
   },
   methods: {
+      /*
+       * @Function: objectPropsToArray
+       * @Param: {Object||Array} inputObject
+       * @Param: {int} currentLevel
+       * @Return: {Array} inputAsArray
+       * Purpose: Flatten objects to an array for displaying items iteratively.
+       */
       objectPropsToArray: function(inputObject, currentLevel){
           if (Array.isArray(inputObject)){
               return inputObject;
@@ -237,6 +244,12 @@ export default {
           }
           return inputAsArray;
       },
+      /*
+       * @Function: clearAllFilters
+       * @Param: None
+       * @Return: Nothing
+       * Purpose: Resets certain variables for a clean slate.
+       */
       clearAllFilters: function(){
           this.filterObject['filterOrder'].splice(0);
           this.searchQuery = '';
@@ -245,12 +258,34 @@ export default {
           this.aggregateFlag = false;
           this.sliced = this.fridge;
       },
+      /*
+       * @Function: processAggregate
+       * @Param: None
+       * @Return: Nothing
+       * Purpose: Sets aggregateFlag to true, established in case of additional
+       *          events to trigger.
+       */
       processAggregate: function(){
           this.aggregateFlag = true;
       },
+      /*
+       * @Function: processSortEvent
+       * @Param: {Object} inputEvent
+       *           @prop: {string} from
+       *           @prop: {int} state
+       * @Return: Nothing
+       * Purpose: Sets the sort state of reverseFlags[inputEvent.from]
+       */
       processSortEvent: function(inputEvent){
           this.reverseFlags[inputEvent.from] = (inputEvent.state == 0) ? true:false;
       },
+      /*
+       * @Function: processFilterEvent
+       * @Param: {string} inputEvent
+       * @Return: Nothing
+       * Purpose: Adds the filter provided by inputEvent to the filterOrder
+       *          array if it is not already in there.
+       */
       processFilterEvent: function(inputEvent){
           if (this.filterObject['filterOrder'].length == 0){
               this.filterObject['filterOrder'] = [inputEvent];
@@ -264,6 +299,14 @@ export default {
               this.filterObject['filterOrder'].push(inputEvent);
           }
       },
+      /*
+       * @Function: broadFilter
+       * @Param: {Object||Array} inputArray
+       * @Param: {string} particularFilter
+       * @Return: {Object} filteredObject
+       * Purpose: Parses inputArray and groups based on particularFilter,
+       *          returns these groupings in the object filteredObject.
+       */
       broadFilter: function(inputArray, particularFilter){
           let filteredObject = {};
           if (Array.isArray(inputArray)){
@@ -281,6 +324,15 @@ export default {
           }
           return filteredObject;
       },
+      /*
+       * @Function: filterManager
+       * @OptionalParam: {Array} overrideFlag
+       * @Return: {Array} filtered
+       * Purpose: Either filters provided array or fridge array, loops through
+       *          filterOrder array inorder, calling broadFilter until all
+       *          filters have been applied at which the object tempFiltered is
+       *          flattened into the resulting filtered array.
+       */
       filterManager: function(overrideArray = []){
           let filtered = [];
           let tempFiltered = {};
@@ -320,9 +372,22 @@ export default {
           filtered = this.objectPropsToArray(tempFiltered, 0);
           return filtered;
       },
+      /*
+       * @Function: updateTab
+       * @Param: {string} newTab
+       * @Return: Nothing
+       * Purpose: Used to update the currentTabComponent state.
+       */
       updateTab: function(newTab){
           this.currentTab = newTab;
       },
+      /*
+       * @Function: objectPropsToArray
+       * @Param: None
+       * @Return: Nothing
+       * Purpose: If viewport for table is low enough, increase the number of
+       *          items to display. Needed to not block render thread at scale.
+       */
       scroll () {
           let element = document.getElementById('infScroll');
           let offset = 300;
@@ -491,15 +556,6 @@ export default {
     z-index: 1;
     color: #82b3c9;
 }
-.tile{
-    height: 40px;
-    width: 120px;
-    margin: 5px 15px;
-    display: inline-block;
-}
-.tile.tab{
-    color: #000;
-}
 .tab{
     height: 780px;
     width: 100%;
@@ -512,15 +568,6 @@ export default {
     width: 100%;
     overflow: auto;
     background-color: #fafafa;
-}
-.quantity-by-food{
-    width: 330px;
-    height: 500px;
-    overflow: auto;
-    display: inline-block;
-    vertical-align: top;
-    text-align: left;
-    border: 1px solid black;
 }
 .filter-button{
     background: #eeeeee;
