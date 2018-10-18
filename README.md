@@ -1,4 +1,5 @@
 # big-fridge
+Viewable at https://big-fridge-vue1.herokuapp.com/
 
 ## Project setup
 ```
